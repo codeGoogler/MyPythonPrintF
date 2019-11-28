@@ -83,7 +83,7 @@ if __name__ == '__main__':
                     row[6] = (row[6] - 19 - 70 * 365) * 86400 - 8 * 3600
                     row[5] = datetime.fromtimestamp(row[5])
                     row[6] = datetime.fromtimestamp(row[6])
-                    # 需要读取彪哥中的单元格数据的证书编号
+                    # 需要读取表格中的单元格数据的证书编号
                     certificate_number = row[1]
                     print("读取编号： ",certificate_number)
                     # serial_number_temp = serial_number[:-len(str(int(row[1])))] + str(int(row[1]))
@@ -113,10 +113,6 @@ if __name__ == '__main__':
                     sheet_ranges_vertical['K14'] = row[6].day
                     sheet_ranges_vertical['F16'] = '       ' + row[3]
                     wb_vertical.save(os.path.join(root_dir, f'{name_sheet}\实训证书-竖版{int(row[0])}-{row[7]}.xlsx'))
-                ss = ss +1
-                if ss == 3:
-                    ss = ""
-
     except Exception as err:
         print(err)
         input('程序错误，请按下任意键结束进程...')
