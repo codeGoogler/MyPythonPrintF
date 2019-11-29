@@ -8,7 +8,7 @@ import xlrd
 from openpyxl import load_workbook
 
 root_dir = r"D:\请上传学生信息相关Excel文档"
-# serial_number = 'XME2019120800000'
+Mode_FIX_ROW_NUM = 17 # 规定模板的行数是17行
 serial_numberNo = 'NO.'
 
 def func(n):
@@ -52,14 +52,21 @@ if __name__ == '__main__':
             # book = xlrd.open_workbook(os.path.join(root_dir, r"XMETC 诚毅学院就业实训295人结业证书登记总表-2019.12.8.xlsx"))
             # name_sheet = 'XMETC 软工3班就业实训40人结业证书登记表'
             ss = 0
-            for name_sheet in book.sheet_names()[1:]:
+            for name_sheet in book.sheet_names():
+                table = book.sheet_by_name(name_sheet)
+                print( "最大行数： ",str(table.nrows)+"，   最大列数: " +str(table.ncols))
+                if table.ncols < Mode_FIX_ROW_NUM  or table.row_values(4)[1] != "证书编号" or table.row_values(4)[7] != "学员姓名":
+                    print("无效的表格名称： " +table.name)
+                    continue
                 if   os.path.exists(os.path.join(root_dir, name_sheet)):
-                    # print(os.path.join(root_dir, "temp"))
                     shutil.move(os.path.join(root_dir, name_sheet), os.path.join(root_dir, "temp"))  #复制一个文件到一个文件或一个目录
-                    # shutil.os.rmdir(os.path.join(root_dir, name_sheet))
                     shutil.rmtree( os.path.join(root_dir, "temp"))
 
-            for name_sheet in book.sheet_names()[1:]:
+            for name_sheet in book.sheet_names():
+                sheet = book.sheet_by_name(name_sheet)
+                if sheet.ncols < Mode_FIX_ROW_NUM  or sheet.row_values(4)[1] != "证书编号" or sheet.row_values(4)[7] != "学员姓名":
+                    print("无效的表格名称： " +table.name)
+                    continue
                 if not os.path.exists(os.path.join(root_dir, name_sheet)):
                     os.makedirs(os.path.join(root_dir, name_sheet))
                     print(os.path.join(root_dir, name_sheet))
@@ -67,7 +74,7 @@ if __name__ == '__main__':
                     shutil.os.rmdir(os.path.join(root_dir, name_sheet))
                     os.makedirs(os.path.join(root_dir, name_sheet))
 
-                sheet = book.sheet_by_name(name_sheet)
+
                 wb = load_workbook(os.path.join(root_dir, r'就业证书-横版.xlsx'))
                 wb_vertical = load_workbook(os.path.join(root_dir, r'实训证书-竖版.xlsx'))
                 sheet_ranges = wb['横版-正面']
